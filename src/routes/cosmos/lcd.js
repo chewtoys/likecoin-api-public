@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser';
 import { Router } from 'express';
 import BigNumber from 'bignumber.js';
-import HttpAgent, { HttpsAgent } from 'agentkeepalive';
 
 import { PUBSUB_TOPIC_MISC } from '../../constant';
 import { COSMOS_LCD_ENDPOINT, amountToLIKE } from '../../util/cosmos';
@@ -10,9 +9,6 @@ import { logCosmosTx } from '../../util/txLogger';
 import publisher from '../../util/gcloudPub';
 
 const proxy = require('express-http-proxy');
-
-const httpAgent = new HttpAgent();
-const httpsAgent = new HttpsAgent();
 
 /* This file is a middleware for logging before passing request to cosmos LCD API */
 const router = Router();
@@ -273,16 +269,6 @@ if (COSMOS_LCD_ENDPOINT) {
         }
       }
       return headers;
-      /* eslint-enable no-param-reassign */
-    },
-    proxyReqOptDecorator: (proxyReqOpts) => {
-      /* eslint-disable no-param-reassign */
-      if (COSMOS_LCD_ENDPOINT.includes('https://')) {
-        proxyReqOpts.agent = httpsAgent;
-      } else if (COSMOS_LCD_ENDPOINT.includes('http://')) {
-        proxyReqOpts.agent = httpAgent;
-      }
-      return proxyReqOpts;
       /* eslint-enable no-param-reassign */
     },
     proxyReqBodyDecorator: (bodyContent, srcReq) => {
