@@ -232,6 +232,7 @@ if (COSMOS_RPC_ENDPOINT) {
             method,
           } = userReq.body;
           if (jsonrpc !== '2.0') return proxyResData;
+          console.log(`cosmos rpc: ${method}`);
           switch (method) {
             case 'broadcast_tx_sync': {
               await handlePostTxReq(userReq.body, JSON.parse(proxyResData.toString('utf8')), userReq);
